@@ -27,6 +27,8 @@ makeCacheMatrix <- function(x = matrix()) {
   get <- function() cachedMatrix
   
   # Setter function for the inverse
+  # Only provided for API compatibility. Getting the inverse
+  # will prime the cache
   setInverse <- function(inverse) cachedInverse <<- inverse
   
   # Getter function for the inverse
@@ -82,5 +84,17 @@ test <- function() {
   if (identical(solve(a.normal), cacheSolve(a.cached))) {
     print("Good, a's inverse is still correct and you should not see a cache miss")
   }
+  
+  b.normal2 <- matrix(rnorm(9), 3, 3)
+  b.cached$set(b.normal2)
+  
+  if (identical(solve(b.normal2), cacheSolve(b.cached))) {
+    print("Good, you can update (should have seen a cache miss)")
+  }
+  
+  if (identical(solve(b.normal2), cacheSolve(b.cached))) {
+    print("Good...same thing but no cache miss")
+  }
+  
   
 }
